@@ -11,7 +11,7 @@ public class App {
         int events = scanner.nextInt();
 
         List<List<Integer>> listOfProcesses = new ArrayList<>();
-        List<List<Integer>> msgQueue = new ArrayList<>(); 
+        // List<List<Integer>> msgQueue = new ArrayList<>(); 
 
         for (int i = 0; i < processes; i++) {
             List<Integer> newProcess = new ArrayList<>();
@@ -38,30 +38,34 @@ public class App {
             int choice = scanner.nextInt();
             if(choice == 1){
                 System.out.println("From which process do you wish to send a message ?");
-                sendFrom = scanner.nextInt();
-                System.out.println("Which event from " + sendFrom + " should send this message ?");
-                sendEvent = scanner.nextInt();
+                sendFrom = scanner.nextInt() - 1;
+                System.out.println("Which event from " + Integer.valueOf(1 + sendFrom) + " should send this message ?");
+                sendEvent = scanner.nextInt() - 1;
                 System.out.println("Which process should receive this message ?");
-                recAt = scanner.nextInt();
-                System.out.println("Which event from " + recAt + " should receive this message ?");
-                recEvent = scanner.nextInt();   
-                msgQueue.add(new ArrayList<>(Arrays.asList(sendFrom,recAt,sendEvent,recEvent)));             
+                recAt = scanner.nextInt() - 1;
+                System.out.println("Which event from " +  Integer.valueOf(1 + recAt) + " should receive this message ?");
+                recEvent = scanner.nextInt() - 1;   
+                // msgQueue.add(new ArrayList<>(Arrays.asList(sendFrom,recAt,sendEvent,recEvent))); 
+                processMsgReq(sendFrom, recAt, sendEvent, recEvent, listOfProcesses);
+                System.out.println("Processes after sending the Message from Process: "+  Integer.valueOf(1 + sendFrom) + " Event: " + Integer.valueOf(1+ sendEvent)
+                 +" to Process:" + Integer.valueOf(1+recAt) +  " Event: " + Integer.valueOf(1+recEvent));
+                printProcesses(listOfProcesses);            
             }else{
                 break;
             }
         }
 
-        printProcesses(msgQueue);
+        // printProcesses(msgQueue);
 
-        //Process these msg requests from the queue one at a time 
-        for(int i =0;i<msgQueue.size();i++){
-            processMsgReq(msgQueue.get(i).get(0), msgQueue.get(i).get(1), 
-            msgQueue.get(i).get(2),msgQueue.get(i).get(3), listOfProcesses);
-            System.out.println("Processes after sending the Message from Process "+  msgQueue.get(i).get(0) + 
-            " event "+msgQueue.get(i).get(2) +" to Process" + msgQueue.get(i).get(1) +  
-            " to event " + msgQueue.get(i).get(3));
-            printProcesses(listOfProcesses);
-        }
+        //Process these msg requests from the queue one at a time (Doing it right after getting the input now, so don't need this msgQueue in v2)
+        // for(int i =0;i<msgQueue.size();i++){
+        //     processMsgReq(msgQueue.get(i).get(0), msgQueue.get(i).get(1), 
+        //     msgQueue.get(i).get(2),msgQueue.get(i).get(3), listOfProcesses);
+        //     System.out.println("Processes after sending the Message from Process "+  msgQueue.get(i).get(0) + 
+        //     " event "+msgQueue.get(i).get(2) +" to Process" + msgQueue.get(i).get(1) +  
+        //     " to event " + msgQueue.get(i).get(3));
+        //     printProcesses(listOfProcesses);
+        // }
 
 
     }
@@ -77,12 +81,15 @@ public class App {
     }
 
     public static void printProcesses(List<List<Integer>> listOfProcesses){
+        System.out.println();
+        int counter = 1;
         for (List<Integer> innerList : listOfProcesses) {
-            System.out.print("[ ");
+            System.out.print("Process "+ counter++ +": [ ");
             for (Integer value : innerList) {
                 System.out.print(value + " ");
             }
             System.out.println("]");
+            System.out.println();
         } 
     }
 }
